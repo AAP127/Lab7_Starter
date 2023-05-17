@@ -67,8 +67,8 @@ function initializeServiceWorker() {
 async function getRecipes() {
   // EXPOSE - START (All expose numbers start with A)
   // A1. TODO - Check local storage to see if there are any recipes.
-  //            If there are recipes, return them.
-  if (localStorage.getItem("recipes") != null){
+  //            If there are recipes, return them.\
+  if (localStorage.getItem("recipes").length == 0){
     return JSON.parse(localStorage.getItem("recipes"));
   }
 
@@ -83,6 +83,7 @@ async function getRecipes() {
   //            function (we call these callback functions). That function will
   //            take two parameters - resolve, and reject. These are functions
   //            you can call to either resolve the Promise or Reject it.
+  
   return new Promise(async (resolve, reject) =>{
     /**************************/
     // A4-A11 will all be *inside* the callback function we passed to the Promise
@@ -93,7 +94,9 @@ async function getRecipes() {
     // A5. TODO - Since we are going to be dealing with asynchronous code, create
     //            a try / catch block. A6-A9 will be in the try portion, A10-A11
     //            will be in the catch portion.
-    for (let url in RECIPE_URLS){
+    
+
+    for (let url of RECIPE_URLS){
       try{
         // A6. TODO - For each URL in that array, fetch the URL - MDN also has a great
         //            article on fetch(). NOTE: Fetches are ASYNCHRONOUS, meaning that
@@ -103,9 +106,9 @@ async function getRecipes() {
   //            NOTE: .json() is ALSO asynchronous, so you will need to use
   //            "await" again
         // A8. TODO - Add the new recipe to the recipes array
-        await fetch(url)
-
-        webRecipes.push(await (await fetch(url).json()));
+        let fetchedURL = await fetch(url);
+        let parsedURL = await fetchedURL.json();
+        webRecipes.push(parsedURL);
         
         
         // A9. TODO - Check to see if you have finished retrieving all of the recipes,
